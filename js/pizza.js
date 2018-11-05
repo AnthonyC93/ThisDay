@@ -22,33 +22,32 @@ $(".sidenav").sidenav({
 });
 
 //only trigger the tooltips if the screen size is over 1024 pixels (tooltip behaves strangely on mobile). This is the size of the biggest iPad. 
-if(window.screen.width>1024){
-
-  $(".showDelete").on("click",function(){
-    if($(".clearSaved").css("display")==="none"){
-      // $(".clearSaved").css("display","block")
-      $(".clearSaved").fadeIn();
-    }else{
-      // $(".clearSaved").css("display","none")
-      $(".clearSaved").fadeOut(250);
-    }
-  })
+if(window.screen.width>=1024){
 
   $(".tooltipped").tooltip({
     enterDelay: 700,
     inDuration: 500,
   });
-}else{
-  $(".showDelete").on("touchstart",function(){
-    if($(".clearSaved").css("display")==="none"){
-      // $(".clearSaved").css("display","block")
-      $(".clearSaved").fadeIn();
-    }else{
-      // $(".clearSaved").css("display","none")
-      $(".clearSaved").fadeOut(250);
-    }
-  })
-}
+ }//else{
+
+//   console.log(window.screen.width)
+//   $(".showDelete").on("touchstart",function(){
+//     if($(".clearSaved").css("display")==="none"){
+//       // $(".clearSaved").css("display","block")
+//       $(".clearSaved").fadeIn();
+//     }else{
+//       // $(".clearSaved").css("display","none")
+//       $(".clearSaved").fadeOut(250);
+//     }
+//   });
+
+//   $("li").on("touchstart",".clearSaved",function(){
+//     console.log("touch been started")
+//     $("#"+event.path[02].id).remove();
+//     savedDays.splice(savedDays.indexOf(event.path[02].id), 1);
+//     localStorage.setItem("savedDays", JSON.stringify(savedDays));
+//   });
+// }
 
 // run a check for "savedDays" item inside of localStorage. 
 // if it gets no result, set savedDays variable to an empty array
@@ -105,7 +104,7 @@ $("#saveDay").on("click", function() {
     savedDays.push(date);
     localStorage.setItem("savedDays", JSON.stringify(savedDays));
     $("#savedDays").append(
-      "<li id='" + date + "' class='savedItem'><a class='waves-effect savedDayButton'>" + readDate() + "</a></li>"
+      "<li id='" + date + "' class='savedItem'><a id='"+ date +"'class='waves-effect savedDayButton'>" + readDate() + "<i class='material-icons clearSaved'>clear</i></a></li>"
     );
   }
 });
@@ -114,6 +113,15 @@ $("#newDateButton").on("click", function() {
   $(".datepicker").datepicker("open");
 });
 
+$(".showDelete").on("click",function(){
+  if($(".clearSaved").css("display")==="none"){
+    // $(".clearSaved").css("display","block")
+    $(".clearSaved").fadeIn();
+  }else{
+    // $(".clearSaved").css("display","none")
+    $(".clearSaved").fadeOut(250);
+  }
+})
 
 $("#clearAllButton").click(function(){
   $("#savedDays").empty()
@@ -123,99 +131,43 @@ $("#clearAllButton").click(function(){
 })
 
 //when a sidenav link is pressed, set date to the value of the html, break up the date into mm/dd/yyyy, and run changePage
-$("#savedDays").on("click", "li",function() {
-  date = $(this).attr("id");
-  // date = $(this).val();
-  console.log($(this).attr("id"))
-  console.log(event);
-  mm = date.split("-")[1];
-  dd = date.split("-")[2];
-  yyyy = date.split("-")[0];
+$("#savedDays").on("click", "a",function() {
 
-  //this is in case the user pressses a sidenav link BEFORE pressing the #pickDay button. 
-  if ($("#pickDay").css("display") != "none") {
-    $("#pickDay").css("display", "none");
-    $(".btn-floating").css("display", "inline-block");
-    // addApodCard();
-    // addNumbersCard();
-    // addViewToggle();
-    // addnyt();
+  if(event.target.className.includes("clearSaved")){
+    $("#"+event.path[02].id).remove();
+    savedDays.splice(savedDays.indexOf(event.path[02].id), 1);
+    localStorage.setItem("savedDays", JSON.stringify(savedDays));
+    checkIcon();
+  }else{
+    date = $(this).attr("id");
+    mm = date.split("-")[1];
+    dd = date.split("-")[2];
+    yyyy = date.split("-")[0];
+    
+    //this is in case the user pressses a sidenav link BEFORE pressing the #pickDay button. 
+    if ($("#pickDay").css("display") != "none") {
+      $("#pickDay").css("display", "none");
+      $(".btn-floating").css("display", "inline-block");
+    }
+    changePage();
   }
-  changePage();
 });
 
-//the cards are created as soon as button is pressed and datepicker is opened. display is initially set to "none"
-$("#pickDay").on("click", function() {
-  // addApodCard();
-  // addNumbersCard();
-  // addViewToggle();
-  // addnyt();
-});
-
+// $("#savedDays").on("click","i.clearSaved",function(){
+//   console.log("clicked clearSaved!!");
+//   $("#"+event.path[02].id).remove();
+//   savedDays.splice(savedDays.indexOf(event.path[02].id), 1);
+//   localStorage.setItem("savedDays", JSON.stringify(savedDays));
+// });
 
 //when "new trivia" button is pressed, run newNumber to call ajax and change html of #trivia
 $(".numberBlock").on("click", "a", function() {
   // newNumber();
 });
 
-$(".clearSaved").on("click",function(){
-  $("#"+event.path[02].id).remove();
-  savedDays.splice(savedDays.indexOf(event.path[02].id), 1);
-  localStorage.setItem("savedDays", JSON.stringify(savedDays));
-})
-
-//makes Astronomy Picture of the Day card and appends to page. display set to "none" by default.
-// function addApodCard() {
-//   console.log("making apod card now");
-//   var newCard = $("<div class='card hoverable apodCard'></div>");
-//   var newCardContent = $("<div class='card-content'></div>");
-//   newCardContent.append("<span class='card-title apodTitle flow-text'></span>");
-//   newCardContent.append("<p class='apodInfo flow-text'></p>");
-//   newCardContent.append("<div class='preloader-wrapper big active center-align'><div class='spinner-layer spinner-blue-only'><div class='circle-clipper left'><div class='circle'></div></div><div class='gap-patch'><div class='circle'></div></div><div class='circle-clipper right'><div class='circle'></div></div></div></div>")
-//   // newCardContent.append("<a class='waves-effect waves-light btn'>view Nasa's Image of the day</a>");
-
-//   newCard.append(newCardContent);
-//   $(".apodCard").append(newCard);
-// }
-
-//makes Trivia card and appends to page. display set to "none" by default.
-// function addNumbersCard() {
-//   var newNumberCard = $("<div class='triviaCard card hoverable'></div>");
-//   var newNumberCardContent = $("<div class='card-content'></div>");
-//   newNumberCardContent.append("<span class='card-title'>Trivia</span>");
-//   newNumberCardContent.append("<p id='trivia'></p>");
-//   newNumberCardContent.append("<a class='waves-effect waves-light btn'>NEW TRIVIA</a>");
-  
-//   newNumberCard.append(newNumberCardContent);
-//   $(".numberBlock").append(newNumberCard);
-// }
-
-//function to add view button instead of Trivia Card. Had to pivot since numbers API does not work from an "HTTPS" page.
-// function addViewToggle(){
-//   var newViewCard = $("<div class='viewCard card hoverable'></div>");
-//   var newViewCardContent = $("<div class='card-content nasaContent'></div>");
-//   // newViewCardContent.append("<a class='waves-effect waves-light btn'>view Nasa's Image of the day</a>");
-//   newViewCardContent.append("<div class='preloader-wrapper active center-align'><div class='spinner-layer spinner-blue-only'><div class='circle-clipper left'><div class='circle'></div></div><div class='gap-patch'><div class='circle'></div></div><div class='circle-clipper right'><div class='circle'></div></div></div></div>");
-  
-//   newViewCard.append(newViewCardContent);
-//   $(".numberBlock").append(newViewCard);
-// }
 
 //call ajax and change html for trivia card
 function newNumber() {
-  // $.ajax({
-  //   url: "https://numbersapi.com/" + mm + "/" + dd + "/date",
-  //   success: function(result) {
-  //     console.log(result);
-  //     numbersInfo = result;
-  //     $("#trivia").html(result);
-  //   }
-  // });
-
-  // $.get("https://numbersapi.p.mashape.com/" + mm + "/" + dd + "/date", function(data) {
-  //   console.log("http://numbersapi.com/" + mm + "/" + dd + "/date?notfound=floor&fragment")
-  //   $('#trivia').text(data);
-  // });
 
   $.ajax({
     url: "https://numbersapi.p.mashape.com/" + mm + "/" + dd + "/date",
@@ -262,11 +214,7 @@ function makeSavedLinks() {
     yyyy = date.split("-")[0];
   
     $("#savedDays").append(
-      "<li id='" +
-        savedDays[a] +
-        "' class='savedItem'><a class='waves-effect savedDayButton'>" +
-        readDate() +
-        "<i class='material-icons clearSaved'>clear</i></a></li>"
+      "<li id='" +savedDays[a] +"' class='savedItem'><a id='"+savedDays[a] +"'class='waves-effect savedDayButton'>" +readDate() +"<i class='material-icons clearSaved'>clear</i></a></li>"
     );
   }
 }
@@ -374,30 +322,6 @@ function changePage() {
   $(".viewCard").css("display","block");
   $(".apodCard").css("display", "block");
   $(".nytCard").css("display", "block");;
-
-
-  // $("#dateDisplay").animate({opacity:0},300).promise().done(function(){
-  //   $(".apodCard").animate({opacity:0},200).promise().done(function(){
-  //     $(".viewCard").animate({opacity:0},100);
-  //     $(".nytCard").animate({opacity:0},100);
-  //   });
-  // });
-
-
-
-  // $("#dateDisplay").fadeOut();
-  // $(".apodCard").fadeOut();
-  // $(".viewCard").fadeOut();
-
-
-  // $(".preloader-wrapper").css("display","block");
-  // $(".added").css("display","none");
-  // $(".apodInfo").css("display","none");
-  // $(".apodTitle").css("display","none");
-  // $(".apodTitle").fadeOut();
-  // $(".apodInfo").fadeOut();
-  // $(".added").fadeOut();
-  
   
   
   //run NASA ajax to change background
@@ -411,7 +335,6 @@ function changePage() {
 
       
       if (result.media_type == "video") {
-        console.log("issa video dawg");
         $("#dateDisplay").css("color","black");
         $(".nasaContent").append("<div class='added video-container'><iframe id='videoPlace' src='"+result.url+"'frameborder='0' allowfullscreen></iframe></div>");
         $(".video-container").css("display","block");
@@ -423,28 +346,16 @@ function changePage() {
       }
       
       $("body").css("background-image", "url(" + result.url + ")");
-      picInfo = result.explanation;
-      picTitle = result.title;
-
-      $(".apodInfo").html(picInfo);
-      $(".apodTitle").html(picTitle);
-      // $(".apodInfo").css("display","block");
-      // $(".preloader-wrapper").css("display","none");
-      // $(".added").css("display","block");
- 
-      // $(".apodTitle").fadeIn("slow");
-      // $(".apodInfo").fadeIn("slow");
-      $("#dateDisplay").text(readDate());
-      // $("#dateDisplay").fadeIn().promise().done(function(){
-      //   $(".apodCard").fadeIn(300).promise().done(function(){
-      //     $(".viewCard").fadeIn(200).promise().done(function(){
-      //       $(".nytCard").fadeIn(100);
-      //     });
-      //   });
-      // });
       
-      $("#dateDisplay").animate({opacity:1},400).promise().done(function(){
-        $(".apodCard").animate({opacity:1},400).promise().done(function(){
+      picInfo = result.explanation;
+      $(".apodInfo").html(picInfo);
+      picTitle = result.title;
+      $(".apodTitle").html(picTitle);
+
+      //APOD is longest AJAX call so the page fades in when this call is done.
+      $("#dateDisplay").text(readDate());
+      $("#dateDisplay").animate({opacity:1},300).promise().done(function(){
+        $(".apodCard").animate({opacity:1},350).promise().done(function(){
           $(".viewCard").animate({opacity:1},400);
           $(".nytCard").animate({opacity:1},400);
         });
@@ -457,10 +368,8 @@ function changePage() {
     }   
   });
 
-
   //run newNumber to change trivia
   // newNumber();
-
 
   //adds 1 to day. ajax call to NYT needs to send date and date+1. this means headaches for last day of the month.
   var dayPlus = parseInt(dd) + 1;
