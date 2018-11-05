@@ -39,7 +39,7 @@ if(window.screen.width>1024){
     inDuration: 500,
   });
 }else{
-  $(".showDelete").on("tap",function(){
+  $(".showDelete").on("touchstart",function(){
     if($(".clearSaved").css("display")==="none"){
       // $(".clearSaved").css("display","block")
       $(".clearSaved").fadeIn();
