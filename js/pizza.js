@@ -93,7 +93,7 @@ $("#newDateButton").on("click", function() {
   $(".datepicker").datepicker("open");
 });
 
-$(".showDelete").on("click touchstart",function(){
+$(".showDelete").on("click tap",function(){
   if($(".clearSaved").css("display")==="none"){
     // $(".clearSaved").css("display","block")
     $(".clearSaved").fadeIn();
