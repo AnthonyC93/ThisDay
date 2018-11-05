@@ -47,7 +47,6 @@ a{
     background-color:#33266e;
 }
 
-
 .btn:hover{
     background-color: #48369b 
 }
@@ -85,8 +84,24 @@ p{
     color:#423093;
 }
 
-.card, .clearSaved, .btn-floating, .preloader-wrapper{
+.card,.clearSaved,.btn-floating, .preloader-wrapper{
     display:none;
+}
+
+li > a > i:hover{
+    cursor: pointer;
+}
+li > a > i{
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;      
+}
+#noHover:hover{
+    background-color: #ffffff;
+}
+.clearSaved{
+    right:0;
 }
 
 .datepicker-cancel, .datepicker-done{
@@ -99,4 +114,7 @@ p{
 
 .preloader-wrapper{
     margin:auto
+}
+.card{
+    opacity:0;
 }
