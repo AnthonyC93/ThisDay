@@ -23,10 +23,31 @@ $(".sidenav").sidenav({
 
 //only trigger the tooltips if the screen size is over 1024 pixels (tooltip behaves strangely on mobile). This is the size of the biggest iPad. 
 if(window.screen.width>1024){
+
+  $(".showDelete").on("click",function(){
+    if($(".clearSaved").css("display")==="none"){
+      // $(".clearSaved").css("display","block")
+      $(".clearSaved").fadeIn();
+    }else{
+      // $(".clearSaved").css("display","none")
+      $(".clearSaved").fadeOut(250);
+    }
+  })
+
   $(".tooltipped").tooltip({
     enterDelay: 700,
     inDuration: 500,
   });
+}else{
+  $(".showDelete").on("tap",function(){
+    if($(".clearSaved").css("display")==="none"){
+      // $(".clearSaved").css("display","block")
+      $(".clearSaved").fadeIn();
+    }else{
+      // $(".clearSaved").css("display","none")
+      $(".clearSaved").fadeOut(250);
+    }
+  })
 }
 
 // run a check for "savedDays" item inside of localStorage. 
@@ -93,15 +114,6 @@ $("#newDateButton").on("click", function() {
   $(".datepicker").datepicker("open");
 });
 
-$(".showDelete").on("click tap",function(){
-  if($(".clearSaved").css("display")==="none"){
-    // $(".clearSaved").css("display","block")
-    $(".clearSaved").fadeIn();
-  }else{
-    // $(".clearSaved").css("display","none")
-    $(".clearSaved").fadeOut(250);
-  }
-})
 
 $("#clearAllButton").click(function(){
   $("#savedDays").empty()
